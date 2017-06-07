@@ -175,15 +175,15 @@ class IOUStateTests {
      * Hint: Make sure that the lender and borrower fields are not in the wrong order as this may cause some
      * confusion in subsequent tasks!
      */
-//    @Test
-//    fun checkIOUStateParameterOrdering() {
-//        val fields = IOUState::class.java.declaredFields
-//        assertEquals(fields[0], IOUState::class.java.getDeclaredField("amount"))
-//        assertEquals(fields[1], IOUState::class.java.getDeclaredField("lender"))
-//        assertEquals(fields[2], IOUState::class.java.getDeclaredField("borrower"))
-//        assertEquals(fields[3], IOUState::class.java.getDeclaredField("paid"))
-//        assertEquals(fields[4], IOUState::class.java.getDeclaredField("linearId"))
-//    }
+    @Test
+    fun checkIOUStateParameterOrdering() {
+        val fields = IOUState::class.java.declaredFields
+        assertEquals(fields[0], IOUState::class.java.getDeclaredField("amount"))
+        assertEquals(fields[1], IOUState::class.java.getDeclaredField("lender"))
+        assertEquals(fields[2], IOUState::class.java.getDeclaredField("borrower"))
+        assertEquals(fields[3], IOUState::class.java.getDeclaredField("paid"))
+        assertEquals(fields[4], IOUState::class.java.getDeclaredField("linearId"))
+    }
 
     /**
      * Task 11.
@@ -203,32 +203,44 @@ class IOUStateTests {
      *
      * The name string name of a party can be obtained from the following property [Party.name].
      */
-//    @Test
-//    fun checkIOUStateToStringMethod() {
-//        val iouState = IOUState(1.POUNDS, ALICE, BOB)
-//        assertEquals(iouState.toString(), "IOU(${iouState.linearId}): Bob owes Alice 1.00 GBP and has paid 0.00 GBP so far.")
-//    }
+    @Test
+    fun checkIOUStateToStringMethod() {
+        val iouState = IOUState(1.POUNDS, ALICE, BOB)
+        assertEquals(iouState.toString(), "IOU(${iouState.linearId}): Bob owes Alice 1.00 GBP and has paid 0.00 GBP so far.")
+    }
 
     /**
      * Task 12.
      * TODO: Add a helper method called [IOUState.pay] to settle an amount of the IOU.
      * Hint: You will need to increase the [IOUState.paid] property by the amount the borrower wishes to pay.
      */
-//    @Test
-//    fun checkPayHelperMethod() {
-//        val iou = IOUState(10.DOLLARS, ALICE, BOB)
-//        assertEquals(5.DOLLARS, iou.pay(5.DOLLARS).paid)
-//        assertEquals(3.DOLLARS, iou.pay(1.DOLLARS).pay(2.DOLLARS).paid)
-//        assertEquals(10.DOLLARS, iou.pay(5.DOLLARS).pay(3.DOLLARS).pay(2.DOLLARS).paid)
-//    }
+    @Test
+    fun checkPayHelperMethod() {
+        val iou = IOUState(10.DOLLARS, ALICE, BOB)
+        assertEquals(5.DOLLARS, iou.pay(5.DOLLARS).paid)
+        assertEquals(3.DOLLARS, iou.pay(1.DOLLARS).pay(2.DOLLARS).paid)
+        assertEquals(10.DOLLARS, iou.pay(5.DOLLARS).pay(3.DOLLARS).pay(2.DOLLARS).paid)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun checkPayHelperMethodThrowsIfTooMuch() {
+        val iou = IOUState(10.DOLLARS, ALICE, BOB)
+        iou.pay(15.DOLLARS)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun checkPayHelperMethodThrowsIfOtherCurrency() {
+        val iou = IOUState(10.DOLLARS, ALICE, BOB)
+        iou.pay(5.POUNDS)
+    }
 
     /**
      * Task 13.
      * TODO: Add a helper method called [IOUState.withNewLender] to create a copy of the IOU where the lender has been changed.
      */
-//    @Test
-//    fun checkWithNewLenderHelperMethod() {
-//        val iou = IOUState(10.DOLLARS, ALICE, BOB)
-//        assertEquals(CHARLIE, iou.withNewLender(CHARLIE).lender)
-//    }
+    @Test
+    fun checkWithNewLenderHelperMethod() {
+        val iou = IOUState(10.DOLLARS, ALICE, BOB)
+        assertEquals(CHARLIE, iou.withNewLender(CHARLIE).lender)
+    }
 }
