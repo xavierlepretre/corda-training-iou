@@ -100,11 +100,11 @@ class IOUStateTests {
      * Hint: Note that [IOUState.participants] list is a list of [CompositeKey]s. [Party] or [AnonymousParty] objects
      * include a property which contains their [CompositeKey] called [Party.owningKey]
      */
-//    @Test
-//    fun lenderIsParticipant() {
-//        val iouState = IOUState(1.POUNDS, ALICE, BOB)
-//        assertNotEquals(iouState.participants.indexOf(ALICE_PUBKEY), -1)
-//    }
+    @Test
+    fun lenderIsParticipant() {
+        val iouState = IOUState(1.POUNDS, ALICE, BOB)
+        assertNotEquals(iouState.participants.indexOf(ALICE_PUBKEY), -1)
+    }
 
     /**
      * Task 6.
@@ -112,11 +112,11 @@ class IOUStateTests {
      * Hint: Note that [IOUState.participants] list is a list of [CompositeKey]s. [AnonymousParty] objects include a
      * property which contains their [CompositeKey] called [Party.owningKey]
      */
-//    @Test
-//    fun borrowerIsParticipant() {
-//        val iouState = IOUState(1.POUNDS, ALICE, BOB)
-//        assertNotEquals(iouState.participants.indexOf(BOB_PUBKEY), -1)
-//    }
+    @Test
+    fun borrowerIsParticipant() {
+        val iouState = IOUState(1.POUNDS, ALICE, BOB)
+        assertNotEquals(iouState.participants.indexOf(BOB_PUBKEY), -1)
+    }
 
     /**
      * Task 7.
@@ -125,10 +125,10 @@ class IOUStateTests {
      * IntellIJ to automatically add the member definitions for you or you can add them yourself. Look at the definition
      * of [LinearState] for what requires adding.
      */
-//    @Test
-//    fun isLinearState() {
-//        assert(LinearState::class.java.isAssignableFrom(IOUState::class.java))
-//    }
+    @Test
+    fun isLinearState() {
+        assert(LinearState::class.java.isAssignableFrom(IOUState::class.java))
+    }
 
     /**
      * Task 8.
@@ -139,13 +139,13 @@ class IOUStateTests {
      * agreement at a specific point in time) together. All the [LinearState]s with the same [LinearState.linearId]
      * represent the complete life-cycle to date of an agreement, asset or shared fact.
      */
-//    @Test
-//    fun hasLinearIdFieldOfCorrectType() {
-//        // Does the linearId field exist?
-//        IOUState::class.java.getDeclaredField("linearId")
-//        // Is the paid field of the correct type?
-//        assertEquals(IOUState::class.java.getDeclaredField("linearId").type, UniqueIdentifier::class.java)
-//    }
+    @Test
+    fun hasLinearIdFieldOfCorrectType() {
+        // Does the linearId field exist?
+        IOUState::class.java.getDeclaredField("linearId")
+        // Is the paid field of the correct type?
+        assertEquals(IOUState::class.java.getDeclaredField("linearId").type, UniqueIdentifier::class.java)
+    }
 
     /**
      * Task 9.
@@ -159,11 +159,15 @@ class IOUStateTests {
      * You can use the [participants.keys] method to get a list of all the [CompositeKeys].
      * You can use [isNotEmpty] to check the intersection of the sets is not empty!
      */
-//    @Test
-//    fun isRelevantMethodComplete() {
-//        val iouState = IOUState(1.POUNDS, ALICE, BOB)
-//        assert(iouState.isRelevant(setOf(ALICE.owningKey.singleKey, BOB.owningKey.singleKey)))
-//    }
+    @Test
+    fun isRelevantMethodComplete() {
+        val iouState = IOUState(1.POUNDS, ALICE, BOB)
+        assert(iouState.isRelevant(setOf(ALICE.owningKey.singleKey, BOB.owningKey.singleKey, CHARLIE.owningKey.singleKey)))
+        assert(iouState.isRelevant(setOf(ALICE.owningKey.singleKey, BOB.owningKey.singleKey)))
+        assert(iouState.isRelevant(setOf(ALICE.owningKey.singleKey)))
+        assert(iouState.isRelevant(setOf(BOB.owningKey.singleKey)))
+        assert(!iouState.isRelevant(setOf(CHARLIE.owningKey.singleKey)))
+    }
 
     /**
      * Task 10.

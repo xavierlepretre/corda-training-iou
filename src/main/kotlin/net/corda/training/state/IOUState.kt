@@ -22,12 +22,21 @@ data class IOUState(
         val lender: Party,
         val borrower: Party,
         val paid: Amount<Currency> = Amount(0, amount.token))
-    : ContractState {
-    override val participants: List<CompositeKey> get() = listOf()
+    : LinearState {
+    override val participants: List<CompositeKey> get() = listOf(
+            lender.owningKey,
+            borrower.owningKey)
 
     /**
      * A Contract code reference to the IOUContract. Make sure this is not part of the [IOUState] constructor.
      * **Don't change this definition!**
      */
     override val contract get() = IOUContract()
+
+    override val linearId: UniqueIdentifier = UniqueIdentifier()
+    override fun isRelevant(ourKeys: Set<PublicKey>): Boolean {
+//        return lender.owningKey.containsAny(ourKeys) || borrower.owningKey.containsAny(ourKeys)
+        return ourKeys.intersect(participants.keys).isNotEmpty()
+    }
+
 }
