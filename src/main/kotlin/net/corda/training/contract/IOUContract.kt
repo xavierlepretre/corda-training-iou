@@ -28,6 +28,7 @@ class IOUContract : Contract {
         // E.g
         // class DoSomething : TypeOnlyCommandData(), Commands
         class Issue : TypeOnlyCommandData(), Commands
+        class Transfer : TypeOnlyCommandData(), Commands
     }
 
     /**
@@ -48,6 +49,21 @@ class IOUContract : Contract {
                     "A newly issued IOU must have a positive amount." by (output.amount.quantity > 0)
                     "The lender and borrower cannot be the same identity." by (output.lender.owningKey != output.borrower.owningKey)
                     "Both lender and borrower together only may sign IOU issue transaction." by (command.signers.toSet() == output.participants.toSet())
+                }
+            }
+            is Commands.Transfer -> {
+                requireThat {
+                    "An IOU transfer transaction should only consume one input state." by (tx.inputs.size == 1)
+                    "An IOU transfer transaction should only create one output state." by (tx.outputs.size == 1)
+                    val input = tx.inputs.first() as IOUState
+                    val output = tx.outputs.first() as IOUState
+                    "Only the lender property may change." by (
+                            input.amount == output.amount &&
+                            input.borrower.owningKey == output.borrower.owningKey &&
+                            input.paid == output.paid)
+                    "The lender property must change in a transfer." by (input.lender.owningKey != output.lender.owningKey)
+                    "The borrower, old lender and new lender only must sign an IOU transfer transaction" by
+                            (command.signers.toSet() == input.participants.toSet().plus(output.participants))
                 }
             }
             else -> throw IllegalArgumentException("Invalid command $command.")
