@@ -61,9 +61,10 @@ class IOUContract : Contract {
                             input.amount == output.amount &&
                             input.borrower.owningKey == output.borrower.owningKey &&
                             input.paid == output.paid)
-                    "The lender property must change in a transfer." by (input.lender.owningKey != output.lender.owningKey)
+                    "Only the lender property may change." by (input == output.withNewLender(input.lender))
+                    "The lender property must change in a transfer." by (input.lender!= output.lender)
                     "The borrower, old lender and new lender only must sign an IOU transfer transaction" by
-                            (command.signers.toSet() == input.participants.toSet().plus(output.participants))
+                            (command.signers.toSet() == input.participants.toSet() + output.participants)
                 }
             }
             else -> throw IllegalArgumentException("Invalid command $command.")

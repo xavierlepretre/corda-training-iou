@@ -51,6 +51,7 @@ data class IOUState(
     }
 
     fun withNewLender(newLender: Party): IOUState {
-        return IOUState(amount, newLender, borrower, paid, linearId)
+//        return IOUState(amount, newLender, borrower, paid, linearId)
+        return this.copy(lender = newLender);
     }
 }
